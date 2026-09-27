@@ -1221,6 +1221,15 @@ public class MediaFileService {
             List<TrackData> cueTracks = fileData.getTrackData();
             int trackSize = cueTracks.size();
 
+            for (TrackData cueTrack : cueTracks) {
+                if (cueTrack.getNumber() <= 0) {
+                    LOG.warn("Invalid CUE sheet track number {} in {}", cueTrack.getNumber(), base.getFullIndexPath());
+                    base.setIndexPath(null);
+                    updateMediaFile(base);
+                    return children;
+                }
+            }
+
             if (trackSize > 0) {
                 TrackData lastTrackData = cueTracks.get(trackSize - 1);
                 double lastTrackStart = getStartPosition(lastTrackData);
